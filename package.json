@@ -1,0 +1,35 @@
+{
+  "name": "react-typed-markup",
+  "description": "Helper module with typed markup factories for React",
+  "keywords": [
+    "typed markup",
+    "react",
+    "css",
+    "bem"
+  ],
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nocheinarbeiter/react-typed-markup.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nocheinarbeiter/react-typed-markup/issues"
+  },
+  "scripts": {
+    "build": "npm run compose && npm run compile",
+    "compose": "node ./src/compose.js",
+    "compile": "tsc --target ES5 --module commonjs --declaration --removeComments --typeRoots ./node_modules/@types/ ./index.ts"
+  },
+  "dependencies": {
+    "@types/b_": "^1.3.1",
+    "b_": "^1.3.3"
+  },
+  "peerDependencies": {
+    "@types/react": "15.0.28",
+    "react": "^15.5.4"
+  },
+  "devDependencies": {
+    "typescript": "^2.5.3"
+  }
+}
