@@ -1,6 +1,6 @@
 import {
     ReactNode, ReactChild,
-    DOMElement, DOMAttributes, HTMLAttributes, ChangeTargetHTMLAttributes, ClassAttributes
+    DOMFactory, HTMLAttributes, ClassAttributes, DetailedReactHTMLElement
 } from 'react';
 
 
@@ -13,20 +13,14 @@ export type StrictReactNode = ReactChild | StrictReactFragment | boolean | null 
 
 // another walkaround about extending props with mods:
 // original declaration for this in @types/react DOMFactory looks like "props?: ClassAttributes<T> & P"
+// (where P extends HTMLAttributes<T>, T extends HTMLElement)
 // if we extends that declaration as "props?: ClassAttributes<T> & P & {mods?: M}"
-// type validation for mods suddenly does not works
-// but if we make equivalent extension using interfaces, it's ok
-export interface MarkupProps<E extends HTMLElement, M> extends ClassAttributes<E>, HTMLAttributes<E> {
-    mods?: M;
-}
-export interface ChangeTargetMarkupProps<E extends HTMLElement, M> extends ClassAttributes<E>, ChangeTargetHTMLAttributes<E> {
-    mods?: M;
-}
+//      then type validation for mods does not works well:
+//      undeclared mod keys may presents without any errors (see typecheck-comparison.ts);
+// so if we make such extension using interfaces, it's ok (generated below)
 
-// custom versions of DOMFactory, HTMLFactory and ChangeTargetHTMLFactory with mods support
-export interface DOMMarkupFactory<P, A extends DOMAttributes<E>, E extends Element> {
-    (child?: StrictReactNode, ...children: ReactNode[]): DOMElement<A, E>;
-    (props?: P, ...children: ReactNode[]): DOMElement<A, E>;
+// custom version of DetailedHTMLFactory with mods support
+export interface Factory<TModProps, TAttributes extends HTMLAttributes<TElement>, TElement extends HTMLElement> {
+    (child?: StrictReactNode, ...children: ReactNode[]): DetailedReactHTMLElement<TAttributes, TElement>;
+    (props?: TModProps, ...children: ReactNode[]): DetailedReactHTMLElement<TAttributes, TElement>;
 }
-export type HTMLMarkupFactory<T extends HTMLElement, M> = DOMMarkupFactory<MarkupProps<T, M>, HTMLAttributes<T>, T>;
-export type ChangeTargetHTMLMarkupFactory<T extends HTMLElement, M> = DOMMarkupFactory<ChangeTargetMarkupProps<T, M>, ChangeTargetHTMLAttributes<T>, T>;
